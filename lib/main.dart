@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:todo_app_embbedv2/new_todo.dart';
 import 'package:todo_app_embbedv2/todo.dart';
 
+import 'package:mongodb_realm/mongodb_realm.dart';
+
 void main() => runApp(Main());
 
 class Main extends StatelessWidget {
@@ -35,6 +37,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
     emptyListController.forward();
     super.initState();
+
+    // Simple test by logging platform version using MongoDB Realm Plugin
+    MongodbRealm.platformVersion.then((version) => print("Currently running version $version"));
   }
 
   @override
