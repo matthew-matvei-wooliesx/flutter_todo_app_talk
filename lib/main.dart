@@ -158,9 +158,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     // We re-use the NewTodoView and push it to the Navigator stack just like
     // before, but now we send the title of the item on the class constructor
     // and expect a new title to be returned so that we can edit the item
-    Navigator.of(context).push(MaterialPageRoute(builder: (context){
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return NewTodoView(item: item);
-    })).then((title){
+    })).then((title) {
       if(title != null) {
         editItem(item, title);
       }
@@ -172,7 +172,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   void removeItemFromList(Todo item, int index) {
-    animatedListKey.currentState.removeItem(index, (context, animation){
+    animatedListKey.currentState.removeItem(index, (context, animation) {
       return SizedBox(width: 0, height: 0,);
     });
     deleteItem(item);
