@@ -25,7 +25,7 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> with TickerProviderStateMixin {
-  List<Todo> items = new List<Todo>();
+  List<Todo> items = [];
   GlobalKey<AnimatedListState> animatedListKey = GlobalKey<AnimatedListState>();
   AnimationController emptyListController;
 
