@@ -32,6 +32,7 @@ dependencies:
 
   mongodb_realm:
     path: ../mongodb_realm/
+  uuid: ^2.2.2
 
 dev_dependencies:
   flutter_test:

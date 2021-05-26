@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:todo_app_embbedv2/domain/todo_item.dart';
+import 'package:todo_app_embbedv2/domain/todo_list.dart';
 import 'package:todo_app_embbedv2/new_todo.dart';
 import 'package:todo_app_embbedv2/todo.dart';
 
@@ -25,7 +27,7 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> with TickerProviderStateMixin {
-  List<Todo> items = [];
+  var todoList = TodoList();
   GlobalKey<AnimatedListState> animatedListKey = GlobalKey<AnimatedListState>();
   AnimationController emptyListController;
 
@@ -67,10 +69,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Widget renderBody(){
-    if(items.length > 0){
-      return buildListView();
-    }else{
+    if (todoList.isEmpty) {
       return emptyList();
+    } else {
+      return buildListView();
     }
   }
   
@@ -86,17 +88,17 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   Widget buildListView() {
     return AnimatedList(
       key: animatedListKey,
-      initialItemCount: items.length,
+      initialItemCount: todoList.count,
       itemBuilder: (BuildContext context,int index, animation){
         return SizeTransition(
           sizeFactor: animation,
-          child: buildItem(items[index], index),
+          child: buildItem(todoList[index], index),
         );
       },
     );
   }
 
-  Widget buildItem(Todo item, int index){
+  Widget buildItem(TodoItem item, int index){
     return Dismissible(
       key: Key('${item.hashCode}'),
       background: Container(color: Colors.red[700]),
@@ -141,15 +143,14 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     })).then((title){
       if(title != null) {
         setState(() {
-          addItem(Todo(title: title));
+          addItem(TodoItem(title));
         });
       }
     });
   }
 
-  void addItem(Todo item){
-    // Insert an item into the top of our list, on index zero
-    items.insert(0, item);
+  void addItem(TodoItem item){
+    todoList.add(item);
     if(animatedListKey.currentState != null)
       animatedListKey.currentState.insertItem(0);
   }
@@ -171,7 +172,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     item.title = title;
   }
 
-  void removeItemFromList(Todo item, int index) {
+  void removeItemFromList(TodoItem item, int index) {
     animatedListKey.currentState.removeItem(index, (context, animation) {
       return SizedBox(width: 0, height: 0,);
     });
@@ -179,13 +180,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     deleteItem(item);
   }
 
-  void deleteItem(Todo item){
-    // We don't need to search for our item on the list because Dart objects
-    // are all uniquely identified by a hashcode. This means we just need to
-    // pass our object on the remove method of the list
-    items.remove(item);
+  void deleteItem(TodoItem item){
+    todoList.remove(item);
 
-    if (items.isNotEmpty || emptyListController == null) {
+    if (todoList.isNotEmpty || emptyListController == null) {
       return;
     }
 
