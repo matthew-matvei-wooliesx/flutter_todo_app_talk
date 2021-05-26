@@ -108,7 +108,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   Widget buildListTile(item, index){
     return ListTile(
-      onTap: () => changeItemCompleteness(item),
+      onTap: () => toggleItemComplete(item),
       onLongPress: () => goToEditItemView(item),
       title: Text(
         item.title,
@@ -126,7 +126,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
   }
 
-  void changeItemCompleteness(Todo item){
+  void toggleItemComplete(Todo item){
     setState(() {
       item.completed = !item.completed;
     });
