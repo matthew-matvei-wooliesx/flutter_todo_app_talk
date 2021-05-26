@@ -184,12 +184,13 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     // are all uniquely identified by a hashcode. This means we just need to
     // pass our object on the remove method of the list
     items.remove(item);
-    if(items.isEmpty) {
-      if(emptyListController != null) {
-        emptyListController.reset();
-        setState(() {});
-        emptyListController.forward();
-      }
+
+    if (items.isNotEmpty || emptyListController == null) {
+      return;
     }
+
+    emptyListController.reset();
+    setState(() {});
+    emptyListController.forward();
   }
 }
