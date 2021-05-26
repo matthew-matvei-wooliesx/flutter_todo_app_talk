@@ -175,8 +175,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     animatedListKey.currentState.removeItem(index, (context, animation) {
       return SizedBox(width: 0, height: 0,);
     });
-    deleteItem(item);
 
+    deleteItem(item);
   }
 
   void deleteItem(Todo item){
