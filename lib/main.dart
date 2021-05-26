@@ -162,12 +162,12 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       return NewTodoView(item: item);
     })).then((title) {
       if(title != null) {
-        editItem(item, title);
+        setItemTitle(item, title);
       }
     });
   }
 
-  void editItem(Todo item ,String title){
+  void setItemTitle(Todo item, String title) {
     item.title = title;
   }
 
