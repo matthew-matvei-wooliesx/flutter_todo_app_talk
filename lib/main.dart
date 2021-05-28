@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:todo_app_embbedv2/domain/todo_item.dart';
 import 'package:todo_app_embbedv2/domain/todo_list.dart';
 import 'package:todo_app_embbedv2/new_todo.dart';
-import 'package:todo_app_embbedv2/todo.dart';
 
 import 'package:mongodb_realm/mongodb_realm.dart';
 
@@ -108,7 +107,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
   }
 
-  Widget buildListTile(item, index){
+  Widget buildListTile(TodoItem item, int index){
     return ListTile(
       onTap: () => toggleItemComplete(item),
       onLongPress: () => goToEditItemView(item),
@@ -116,11 +115,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         item.title,
         key: Key('item-$index'),
         style: TextStyle(
-          color: item.completed ? Colors.grey : Colors.black,
-          decoration: item.completed ? TextDecoration.lineThrough : null
+          color: item.complete ? Colors.grey : Colors.black,
+          decoration: item.complete ? TextDecoration.lineThrough : null
         ),
       ),
-      trailing: Icon(item.completed
+      trailing: Icon(item.complete
         ? Icons.check_box
         : Icons.check_box_outline_blank,
         key: Key('completed-icon-$index'),
@@ -128,9 +127,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
   }
 
-  void toggleItemComplete(Todo item){
+  void toggleItemComplete(TodoItem item){
     setState(() {
-      item.completed = !item.completed;
+      item.complete = !item.complete;
     });
   }
 
@@ -155,7 +154,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       animatedListKey.currentState.insertItem(0);
   }
 
-  void goToEditItemView(Todo item){
+  void goToEditItemView(TodoItem item){
     // We re-use the NewTodoView and push it to the Navigator stack just like
     // before, but now we send the title of the item on the class constructor
     // and expect a new title to be returned so that we can edit the item
@@ -168,7 +167,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     });
   }
 
-  void setItemTitle(Todo item, String title) {
+  void setItemTitle(TodoItem item, String title) {
     item.title = title;
   }
 

@@ -1,7 +1,6 @@
 import 'package:test/test.dart';
 import 'package:todo_app_embbedv2/domain/todo_item.dart';
 import 'package:todo_app_embbedv2/main.dart';
-import 'package:todo_app_embbedv2/todo.dart';
 
 void main(){
   group('Home', () {

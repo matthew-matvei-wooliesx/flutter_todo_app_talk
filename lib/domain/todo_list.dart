@@ -1,8 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:mongodb_realm/syncable.dart';
 import 'package:todo_app_embbedv2/domain/todo_item.dart';
 import 'package:uuid/uuid.dart';
 
-class TodoList implements Syncable {
+class TodoList implements Syncable<TodoList> {
   final String _id;
   final List<TodoItem> _items = [];
 
@@ -20,8 +21,9 @@ class TodoList implements Syncable {
   String identity() => _id;
 
   @override
-  String content() {
-    // TODO: implement content
-    throw UnimplementedError();
-  }
+  Sync<TodoList> content() => TodoListSync(items: _items.map((e) => e.content()));
+}
+
+class TodoListSync implements Sync<TodoList> {
+  TodoListSync({@required List<TodoItemSync> items});
 }

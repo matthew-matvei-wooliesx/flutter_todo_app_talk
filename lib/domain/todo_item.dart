@@ -1,7 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:mongodb_realm/syncable.dart';
 import 'package:uuid/uuid.dart';
 
-class TodoItem implements Syncable {
+class TodoItem implements Syncable<TodoItem> {
   final String _id;
   String title;
   bool complete = false;
@@ -12,6 +13,9 @@ class TodoItem implements Syncable {
   String identity() => _id;
 
   @override
-  // TODO: implement content by JSON-serialising this model
-  String content() => throw UnimplementedError();
+  Sync<TodoItem> content() => TodoItemSync(title: title, complete: complete);
+}
+
+class TodoItemSync implements Sync<TodoItem> {
+  TodoItemSync({@required String title, @required bool complete});
 }

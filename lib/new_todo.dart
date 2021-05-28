@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app_embbedv2/todo.dart';
+
+import 'domain/todo_item.dart';
 
 class NewTodoView extends StatefulWidget {
-  final Todo item;
+  final TodoItem item;
 
   NewTodoView({ this.item });
 

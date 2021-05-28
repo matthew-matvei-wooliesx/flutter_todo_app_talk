@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:todo_app_embbedv2/domain/todo_item.dart';
 import 'package:todo_app_embbedv2/new_todo.dart';
 import 'package:todo_app_embbedv2/main.dart';
-import 'package:todo_app_embbedv2/todo.dart';
 
 void main() {
   testWidgets('Test Home Widget by checking if the title is present on app start', (WidgetTester tester) async {
@@ -27,7 +27,7 @@ void main() {
   });
 
   testWidgets('Test NewTodo Widget with an item by checking if the title is present, the item was loaded and set on the textfield', (WidgetTester tester) async {
-    final item = new Todo(title: 'test todo');
+    final item = new TodoItem('test todo');
     final newTodoView = new NewTodoView(item: item,);
 
     await tester.pumpWidget(
