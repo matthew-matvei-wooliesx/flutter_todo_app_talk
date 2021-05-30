@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mongodb_realm/sync_store.dart';
 import 'package:todo_app_embbedv2/domain/todo_item.dart';
 import 'package:todo_app_embbedv2/domain/todo_list.dart';
 import 'package:todo_app_embbedv2/new_todo.dart';
@@ -22,13 +23,16 @@ class Main extends StatelessWidget {
 
 class Home extends StatefulWidget {
   @override
-  HomeState createState() => HomeState();
+  HomeState createState() => HomeState(SyncStore());
 }
 
 class HomeState extends State<Home> with TickerProviderStateMixin {
+  final SyncStore _syncStore;
   var todoList = TodoList();
   GlobalKey<AnimatedListState> animatedListKey = GlobalKey<AnimatedListState>();
   AnimationController emptyListController;
+
+  HomeState(SyncStore syncStore) : _syncStore = syncStore;
 
   @override
   void initState() {
@@ -127,10 +131,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
   }
 
-  void toggleItemComplete(TodoItem item){
-    setState(() {
-      item.complete = !item.complete;
-    });
+  Future toggleItemComplete(TodoItem item) async {
+    item.complete = !item.complete;
+    await _syncStore.update(item);
+    setState(() { });
   }
 
   void goToNewItemView(){
