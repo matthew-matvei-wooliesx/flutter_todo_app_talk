@@ -67,7 +67,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () => goToNewItemView(context),
+        onPressed: () => goToNewItemView(),
       ),
       body: renderBody()
     );
