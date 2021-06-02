@@ -4,10 +4,17 @@ import 'package:uuid/uuid.dart';
 
 class TodoItem implements Syncable<TodoItem> {
   final String _id;
-  String title;
-  bool complete = false;
+  final String title;
+  final bool complete;
 
-  TodoItem(this.title) : _id = Uuid().v4();
+  TodoItem(this.title) : _id = Uuid().v4(), complete = false;
+  const TodoItem._(String id, {this.title, this.complete}) : _id = id;
+
+  TodoItem withTitle(String title) =>
+      TodoItem._(_id, title: title, complete: complete);
+
+  TodoItem withComplete(bool complete) =>
+      TodoItem._(_id, title: title, complete: complete);
 
   @override
   String identity() => _id;

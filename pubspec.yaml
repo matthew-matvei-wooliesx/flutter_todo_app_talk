@@ -33,6 +33,9 @@ dependencies:
   mongodb_realm:
     path: ../mongodb_realm/
   uuid: ^2.2.2
+  flutter_riverpod: ^0.14.0+3
+  hooks_riverpod: ^0.14.0+4
+  flutter_hooks: ^0.17.0
 
 dev_dependencies:
   flutter_test:

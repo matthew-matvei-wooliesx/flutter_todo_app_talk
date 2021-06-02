@@ -5,12 +5,27 @@ import 'package:uuid/uuid.dart';
 
 class TodoList implements Syncable<TodoList> {
   final String _id;
-  final List<TodoItem> _items = [];
+  final List<TodoItem> _items;
 
-  TodoList() : _id = Uuid().v4();
+  TodoList() : _id = Uuid().v4(), _items = [];
+  const TodoList._(String id, List<TodoItem> items) : _id = id, _items = items;
 
-  void add(TodoItem item) => _items.insert(0, item);
-  void remove(TodoItem item) => _items.remove(item);
+  TodoList add(TodoItem item) =>
+      TodoList._(_id, [item, ..._items]);
+
+  TodoList remove(TodoItem item) =>
+      TodoList._(_id, _items.where((element) => element.identity() != item.identity()));
+
+  TodoList toggleComplete(TodoItem item) =>
+      TodoList._(_id, _items.map((e) => e.identity() == item.identity()
+          ? e.withComplete(!e.complete)
+          : e));
+
+  TodoList setItemTitle(TodoItem item, String title) =>
+      TodoList._(_id, _items.map((e) => e.identity() == item.identity()
+          ? e.withTitle(title)
+          : e));
+
   bool get isEmpty => _items.isEmpty;
   bool get isNotEmpty => _items.isNotEmpty;
   int get count => _items.length;
