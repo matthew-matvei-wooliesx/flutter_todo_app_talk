@@ -14,17 +14,29 @@ class TodoList implements Syncable<TodoList> {
       TodoList._(_id, [item, ..._items]);
 
   TodoList remove(TodoItem item) =>
-      TodoList._(_id, _items.where((element) => element.identity() != item.identity()));
+      TodoList._(
+          _id,
+          _items
+              .where((element) => element.identity() != item.identity())
+              .toList());
 
   TodoList toggleComplete(TodoItem item) =>
-      TodoList._(_id, _items.map((e) => e.identity() == item.identity()
-          ? e.withComplete(!e.complete)
-          : e));
+      TodoList._(
+          _id,
+          _items
+              .map((e) => e.identity() == item.identity()
+                ? e.withComplete(!e.complete)
+                : e)
+              .toList());
 
   TodoList setItemTitle(TodoItem item, String title) =>
-      TodoList._(_id, _items.map((e) => e.identity() == item.identity()
-          ? e.withTitle(title)
-          : e));
+      TodoList._(
+          _id,
+          _items
+              .map((e) => e.identity() == item.identity()
+                ? e.withTitle(title)
+                : e)
+              .toList());
 
   bool get isEmpty => _items.isEmpty;
   bool get isNotEmpty => _items.isNotEmpty;
