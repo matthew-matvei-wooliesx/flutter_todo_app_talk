@@ -71,40 +71,38 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         child: Icon(Icons.add),
         onPressed: () => goToNewItemView(),
       ),
-      body: renderBody()
+      body: Consumer(
+        builder: (_, ScopedReader watch, __) {
+          final todoList = watch(todoListProvider);
+          return renderBody(todoList);
+        },
+      )
     );
   }
 
-  Widget renderBody() {
-    final todoListIsEmpty = context.read(todoListCountProvider) == 0;
-
-    if (todoListIsEmpty) {
-      return emptyList();
-    } else {
-      return buildListView();
-    }
+  Widget renderBody(TodoList todoList) {
+    return todoList.isEmpty
+        ? emptyList()
+        : buildListView(todoList);
   }
   
   Widget emptyList(){
     return Center(
-    child: FadeTransition(
-      opacity: emptyListController,
-      child: Text('No items')
-    )
+      child: FadeTransition(
+        opacity: emptyListController,
+        child: Text('No items')
+      )
     );
   }
 
-  Widget buildListView() {
-    final todoListCount = context.read(todoListCountProvider);
-
+  Widget buildListView(TodoList todoList) {
     return AnimatedList(
       key: animatedListKey,
-      initialItemCount: todoListCount,
+      initialItemCount: todoList.count,
       itemBuilder: (BuildContext _, int index, Animation<double> animation) {
-        final todoItem = context.read(todoListProvider)[index];
         return SizeTransition(
           sizeFactor: animation,
-          child: buildItem(todoItem, index),
+          child: buildItem(todoList[index], index),
         );
       },
     );
