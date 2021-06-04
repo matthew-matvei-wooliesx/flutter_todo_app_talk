@@ -13,15 +13,15 @@ class SyncedTodoListNotifier extends StateNotifier<TodoList> {
   }
 
   Future remove(TodoItem item) async {
-    await _withStateChanged((s) => s.remove(item));
+    state = await _withStateChanged((s) => s.remove(item));
   }
 
   Future toggleComplete(TodoItem item) async {
-    await _withStateChanged((s) => s.toggleComplete(item));
+    state = await _withStateChanged((s) => s.toggleComplete(item));
   }
 
   Future setItemTitle(TodoItem item, String title) async {
-    await _withStateChanged((s) => s.setItemTitle(item, title));
+    state = await _withStateChanged((s) => s.setItemTitle(item, title));
   }
 
   Future<TodoList> _withStateChanged(TodoList Function(TodoList) map) async {
