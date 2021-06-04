@@ -17,25 +17,25 @@ class TodoList implements Syncable<TodoList> {
       TodoList._(
           _id,
           _items
-              .where((element) => element.identity() != item.identity())
+              .where((i) => i.id != item.id)
               .toList());
 
   TodoList toggleComplete(TodoItem item) =>
       TodoList._(
           _id,
           _items
-              .map((e) => e.identity() == item.identity()
-                ? e.withComplete(!e.complete)
-                : e)
+              .map((i) => i.id == item.id
+                ? i.withComplete(!i.complete)
+                : i)
               .toList());
 
   TodoList setItemTitle(TodoItem item, String title) =>
       TodoList._(
           _id,
           _items
-              .map((e) => e.identity() == item.identity()
-                ? e.withTitle(title)
-                : e)
+              .map((i) => i.id == item.id
+                ? i.withTitle(title)
+                : i)
               .toList());
 
   bool get isEmpty => _items.isEmpty;
@@ -48,9 +48,17 @@ class TodoList implements Syncable<TodoList> {
   String identity() => _id;
 
   @override
-  Sync<TodoList> content() => TodoListSync(items: _items.map((e) => e.content()));
+  Sync<TodoList> content() =>
+      TodoListSync(items: _items.map((item) =>
+          _TodoItemSync(
+              title: item.title,
+              complete: item.complete)));
 }
 
 class TodoListSync implements Sync<TodoList> {
-  TodoListSync({@required List<TodoItemSync> items});
+  TodoListSync({@required List<_TodoItemSync> items});
+}
+
+class _TodoItemSync {
+  _TodoItemSync({String title, bool complete});
 }
