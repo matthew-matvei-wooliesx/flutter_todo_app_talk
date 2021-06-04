@@ -147,9 +147,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return NewTodoView();
     })).then((title){
-      setState(() {
-
-      });
       if(title != null && title != "") {
         addItem(TodoItem(title));
       }
