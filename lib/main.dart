@@ -12,7 +12,9 @@ import 'package:mongodb_realm/mongodb_realm.dart';
 final todoListProvider = StateNotifierProvider<SyncedTodoListNotifier, TodoList>((ref) =>
   new SyncedTodoListNotifier(new SyncStore<TodoList>()));
 
-void main() => runApp(Main());
+final todoListCountProvider = Provider<int>((ref) => ref.watch(todoListProvider).count);
+
+void main() => runApp(ProviderScope(child: Main()));
 
 class Main extends StatelessWidget {
   @override
@@ -74,7 +76,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Widget renderBody() {
-    final todoListIsEmpty = useProvider(todoListProvider.select((list) => list.isEmpty));
+    final todoListIsEmpty = context.read(todoListCountProvider) == 0;
 
     if (todoListIsEmpty) {
       return emptyList();
@@ -93,13 +95,13 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Widget buildListView() {
-    final todoListCount = useProvider(todoListProvider.select((list) => list.count));
+    final todoListCount = context.read(todoListCountProvider);
 
     return AnimatedList(
       key: animatedListKey,
       initialItemCount: todoListCount,
       itemBuilder: (BuildContext _, int index, Animation<double> animation) {
-        final todoItem = useProvider(todoListProvider.select((value) => value[index]));
+        final todoItem = context.read(todoListProvider)[index];
         return SizeTransition(
           sizeFactor: animation,
           child: buildItem(todoItem, index),
@@ -120,7 +122,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   Widget buildListTile(TodoItem item, int index){
     return ListTile(
-      onTap: () => useProvider(todoListProvider.notifier).toggleComplete(item),
+      onTap: () => context.read(todoListProvider.notifier).toggleComplete(item),
       onLongPress: () => goToEditItemView(item),
       title: Text(
         item.title,
@@ -142,17 +144,20 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     // Here we are pushing the new view into the Navigator stack. By using a
     // MaterialPageRoute we get standard behaviour of a Material app, which will
     // show a back button automatically for each platform on the left top corner
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return NewTodoView();
     })).then((title){
-      if(title != null) {
+      setState(() {
+
+      });
+      if(title != null && title != "") {
         addItem(TodoItem(title));
       }
     });
   }
 
   Future addItem(TodoItem item) async {
-    await useProvider(todoListProvider.notifier).add(item);
+    await context.read(todoListProvider.notifier).add(item);
 
     if(animatedListKey.currentState != null)
       animatedListKey.currentState.insertItem(0);
@@ -165,14 +170,14 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     Navigator.of(context).push(MaterialPageRoute(builder: (_) {
       return NewTodoView(item: item);
     })).then((title) {
-      if(title != null) {
+      if(title != null && title != "") {
         setItemTitle(item, title);
       }
     });
   }
 
   Future setItemTitle(TodoItem item, String title) async {
-    await useProvider(todoListProvider.notifier).setItemTitle(item, title);
+    await context.read(todoListProvider.notifier).setItemTitle(item, title);
   }
 
   Future removeItemFromList(TodoItem item, int index) async {
@@ -184,8 +189,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   }
 
   Future deleteItem(TodoItem item) async {
-    await useProvider(todoListProvider.notifier).remove(item);
-    final todoListIsEmpty = useProvider(todoListProvider.select((list) => list.isEmpty));
+    await context.read(todoListProvider.notifier).remove(item);
+    final todoListIsEmpty = context.read(todoListCountProvider) == 0;
 
     if (todoListIsEmpty || emptyListController == null) {
       return;
