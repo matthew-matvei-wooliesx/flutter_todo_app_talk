@@ -26,7 +26,7 @@ class SyncedTodoListNotifier extends StateNotifier<TodoList> {
 
   Future<TodoList> _withStateChanged(TodoList Function(TodoList) map) async {
     final changedState = map(state);
-    await _syncStore.update(changedState);
+    await _syncStore.upsert(changedState);
     return changedState;
   }
 }

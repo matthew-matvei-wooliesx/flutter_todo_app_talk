@@ -49,16 +49,34 @@ class TodoList implements Syncable<TodoList> {
 
   @override
   Sync<TodoList> content() =>
-      TodoListSync(items: _items.map((item) =>
-          _TodoItemSync(
-              title: item.title,
-              complete: item.complete)));
+      TodoListSync(items: _items
+          .map((item) =>
+            _TodoItemSync(
+                title: item.title,
+                complete: item.complete))
+          .toList());
 }
 
-class TodoListSync implements Sync<TodoList> {
-  TodoListSync({@required List<_TodoItemSync> items});
+class TodoListSync implements ListSync<TodoList> {
+  final List<Map> _payload;
+
+  TodoListSync({@required List<_TodoItemSync> items})
+      : _payload = items.map((e) => e.payload).toList();
+
+  @override
+  List get payload => _payload;
 }
 
-class _TodoItemSync {
-  _TodoItemSync({String title, bool complete});
+class _TodoItemSync implements MapSync<_TodoItemSync> {
+  final String _title;
+  final bool _complete;
+
+  _TodoItemSync({String title, bool complete}) : _title = title, _complete = complete;
+
+  @override
+  Map get payload => Map.fromEntries(
+      [
+        MapEntry("title", _title), MapEntry("complete", _complete)
+      ]);
+
 }
