@@ -61,10 +61,10 @@ class TodoListSync implements ListSync<TodoList> {
   final List<Map> _payload;
 
   TodoListSync({@required List<_TodoItemSync> items})
-      : _payload = items.map((e) => e.payload).toList();
+      : _payload = items.map((e) => e.payload()).toList();
 
   @override
-  List get payload => _payload;
+  List payload() => _payload;
 }
 
 class _TodoItemSync implements MapSync<_TodoItemSync> {
@@ -74,7 +74,7 @@ class _TodoItemSync implements MapSync<_TodoItemSync> {
   _TodoItemSync({String title, bool complete}) : _title = title, _complete = complete;
 
   @override
-  Map get payload => Map.fromEntries(
+  Map payload() => Map.fromEntries(
       [
         MapEntry("title", _title), MapEntry("complete", _complete)
       ]);
