@@ -10,6 +10,12 @@ class TodoList implements Syncable<TodoList> {
   TodoList() : _id = Uuid().v4(), _items = [];
   const TodoList._(String id, List<TodoItem> items) : _id = id, _items = items;
 
+  TodoList.parse(dynamic data) :
+        _id = data["identifier"],
+        _items = (data["content"] as List<dynamic>)
+            .map((item) => TodoItem.parse(item))
+            .toList();
+
   TodoList add(TodoItem item) =>
       TodoList._(_id, [item, ..._items]);
 
