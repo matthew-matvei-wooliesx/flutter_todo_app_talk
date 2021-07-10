@@ -16,3 +16,17 @@ class TodoItem {
   TodoItem withComplete(bool complete) =>
       TodoItem._(id, title: title, complete: complete);
 }
+
+class TodoItemSync implements MapSync<TodoItemSync> {
+  final String _title;
+  final bool _complete;
+
+  TodoItemSync({String title, bool complete}) : _title = title, _complete = complete;
+
+  @override
+  Map payload() => Map.fromEntries(
+      [
+        MapEntry("title", _title), MapEntry("complete", _complete)
+      ]);
+
+}
