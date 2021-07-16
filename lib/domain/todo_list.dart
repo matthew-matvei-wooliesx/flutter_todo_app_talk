@@ -3,7 +3,7 @@ import 'package:mongodb_realm/syncable.dart';
 import 'package:todo_app_embbedv2/domain/todo_item.dart';
 import 'package:uuid/uuid.dart';
 
-class TodoList implements Syncable<TodoList> {
+class TodoList implements Syncable<TodoListSync> {
   final String _id;
   final List<TodoItem> _items;
 
@@ -54,7 +54,7 @@ class TodoList implements Syncable<TodoList> {
   String identity() => _id;
 
   @override
-  Sync<TodoList> content() =>
+  TodoListSync content() =>
       TodoListSync(items: _items
           .map((item) =>
             TodoItemSync(
@@ -63,7 +63,7 @@ class TodoList implements Syncable<TodoList> {
           .toList());
 }
 
-class TodoListSync implements ListSync<TodoList> {
+class TodoListSync implements ListSync {
   final List<Map> _payload;
 
   TodoListSync({@required List<TodoItemSync> items})

@@ -21,7 +21,7 @@ class TodoItem {
       TodoItem._(id, title: title, complete: complete);
 }
 
-class TodoItemSync implements MapSync<TodoItemSync> {
+class TodoItemSync implements MapSync {
   final String _title;
   final bool _complete;
 
