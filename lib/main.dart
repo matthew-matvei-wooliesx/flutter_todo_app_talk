@@ -59,44 +59,45 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'FlutterTodo',
-          key: Key('main-app-title'),
-        ),
-        centerTitle: true,
-      ),
-      floatingActionButton: Stack(
-        children: <Widget>[
-          Positioned(
-            bottom: 10,
-              right: 10,
-            child: FloatingActionButton(
-              tooltip: 'Create item',
-              child: Icon(Icons.add),
-              onPressed: () => goToNewItemView(),
-              heroTag: 'Create',
+    return Consumer(
+      builder: (_, ScopedReader watch, __) {
+        final todoList = watch(todoListProvider);
+
+        return Scaffold(
+            appBar: AppBar(
+              title: Text(
+                'FlutterTodo',
+                key: Key('main-app-title'),
+              ),
+              centerTitle: true,
             ),
-          ),
-          Positioned(
-            bottom: 90,
-            right: 10,
-            child: FloatingActionButton(
-              tooltip: 'Reset Todo List',
-              child: Icon(Icons.delete),
-              onPressed: () => deleteTodoList(),
-              heroTag: 'Reset',
+            floatingActionButton: Stack(
+              children: <Widget>[
+                Positioned(
+                  bottom: 10,
+                  right: 10,
+                  child: FloatingActionButton(
+                    tooltip: 'Create item',
+                    child: Icon(Icons.add),
+                    onPressed: () => goToNewItemView(),
+                    heroTag: 'Create',
+                  ),
+                ),
+                if (todoList.isNotEmpty) Positioned(
+                  bottom: 90,
+                  right: 10,
+                  child: FloatingActionButton(
+                    tooltip: 'Reset Todo List',
+                    child: Icon(Icons.delete),
+                    onPressed: () => deleteTodoList(),
+                    heroTag: 'Reset',
+                  ),
+                )
+              ],
             ),
-          )
-        ],
-      ),
-      body: Consumer(
-        builder: (_, ScopedReader watch, __) {
-          final todoList = watch(todoListProvider);
-          return renderBody(todoList);
-        },
-      )
+            body: renderBody(todoList)
+        );
+      },
     );
   }
 
