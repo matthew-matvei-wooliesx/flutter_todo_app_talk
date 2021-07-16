@@ -46,9 +46,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
     emptyListController.forward();
     super.initState();
-
-    // Simple test by logging platform version using MongoDB Realm Plugin
-    MongodbRealm.platformVersion.then((version) => print("Currently running version $version"));
   }
 
   @override
