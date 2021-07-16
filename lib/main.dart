@@ -76,7 +76,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                   child: FloatingActionButton(
                     tooltip: 'Create item',
                     child: Icon(Icons.add),
-                    onPressed: () => goToNewItemView(),
+                    onPressed: _goToNewItemView,
                     heroTag: 'Create',
                   ),
                 ),
@@ -86,7 +86,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                   child: FloatingActionButton(
                     tooltip: 'Reset Todo List',
                     child: Icon(Icons.delete),
-                    onPressed: () => deleteTodoList(),
+                    onPressed: _deleteTodoList,
                     heroTag: 'Reset',
                   ),
                 )
@@ -156,7 +156,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
   }
 
-  void goToNewItemView() {
+  void _goToNewItemView() {
     // Here we are pushing the new view into the Navigator stack. By using a
     // MaterialPageRoute we get standard behaviour of a Material app, which will
     // show a back button automatically for each platform on the left top corner
@@ -189,7 +189,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     });
   }
 
-  Future deleteTodoList() async {
+  Future _deleteTodoList() async {
     await context.read(todoListProvider.notifier).deleteList();
   }
 
