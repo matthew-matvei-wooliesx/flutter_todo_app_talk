@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mongodb_realm/sync_store.dart';
+import 'package:mongodb_realm/syncable.dart';
 import 'package:todo_app_embbedv2/domain/todo_item.dart';
 import 'package:todo_app_embbedv2/domain/todo_list.dart';
 
@@ -35,11 +36,13 @@ class SyncedTodoListNotifier extends StateNotifier<TodoList> {
   }
 
   Future _hydrateTodoList() async {
-    final List<dynamic> data = await _syncStore.getMany();
+    final List<SyncableTuple> data = await _syncStore.getMany();
     if (data?.isEmpty ?? true) {
       return;
     }
 
-    state = TodoList.parse(data[0]);
+    final singletonTodoList = data[0];
+
+    state = TodoList.parse(singletonTodoList.identity, singletonTodoList.content);
   }
 }
