@@ -3,6 +3,13 @@ import 'package:mongodb_realm/syncable.dart';
 import 'package:todo_app_embbedv2/domain/todo_item.dart';
 import 'package:uuid/uuid.dart';
 
+/// Represents the primary domain object in this application, a to-do list.
+///
+/// Since this class implements [Syncable], it can be stored and retrieved in a
+/// Realm. Therefore, its identity must be consistent across sessions. This
+/// class is implemented as an immutable data structure to improve compatibility
+/// with this application's state management solution, which reacts to
+/// reassignment.
 class TodoList implements Syncable<TodoListSync> {
   final String _id;
   final List<TodoItem> _items;
@@ -63,6 +70,7 @@ class TodoList implements Syncable<TodoListSync> {
           .toList());
 }
 
+/// Defines the persistable representation of a [TodoList].
 class TodoListSync implements ListSync {
   final List<Map> _payload;
 

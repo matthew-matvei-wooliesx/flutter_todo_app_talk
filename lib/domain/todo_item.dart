@@ -1,6 +1,11 @@
 import 'package:mongodb_realm/syncable.dart';
 import 'package:uuid/uuid.dart';
 
+/// An individual item on a to-do list.
+///
+/// This is implemented as a simple immutable object. Note that while each item
+/// has an [id] property, this only needs to be unique within the to-do list it
+/// appears on, and is not intended to be used for data persistence purposes.
 class TodoItem {
   final String id;
   final String title;
