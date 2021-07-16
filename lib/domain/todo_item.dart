@@ -14,11 +14,8 @@ class TodoItem {
         title = data["title"],
         complete = data["complete"];
 
-  TodoItem withTitle(String title) =>
-      TodoItem._(id, title: title, complete: complete);
-
-  TodoItem withComplete(bool complete) =>
-      TodoItem._(id, title: title, complete: complete);
+  TodoItem copyWith({String title = null, bool complete = null}) =>
+    TodoItem._(id, title: title ?? this.title, complete: complete ?? this.complete);
 }
 
 class TodoItemSync implements MapSync {

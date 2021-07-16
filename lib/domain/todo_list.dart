@@ -31,7 +31,7 @@ class TodoList implements Syncable<TodoListSync> {
           _id,
           _items
               .map((i) => i.id == item.id
-                ? i.withComplete(!i.complete)
+                ? i.copyWith(complete: !i.complete)
                 : i)
               .toList());
 
@@ -40,7 +40,7 @@ class TodoList implements Syncable<TodoListSync> {
           _id,
           _items
               .map((i) => i.id == item.id
-                ? i.withTitle(title)
+                ? i.copyWith(title: title)
                 : i)
               .toList());
 
