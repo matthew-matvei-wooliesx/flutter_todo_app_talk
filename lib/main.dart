@@ -67,9 +67,29 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         ),
         centerTitle: true,
       ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        onPressed: () => goToNewItemView(),
+      floatingActionButton: Stack(
+        children: <Widget>[
+          Positioned(
+            bottom: 10,
+              right: 10,
+            child: FloatingActionButton(
+              tooltip: 'Create item',
+              child: Icon(Icons.add),
+              onPressed: () => goToNewItemView(),
+              heroTag: 'Create',
+            ),
+          ),
+          Positioned(
+            bottom: 90,
+            right: 10,
+            child: FloatingActionButton(
+              tooltip: 'Reset Todo List',
+              child: Icon(Icons.delete),
+              onPressed: () => deleteTodoList(),
+              heroTag: 'Reset',
+            ),
+          )
+        ],
       ),
       body: Consumer(
         builder: (_, ScopedReader watch, __) {
@@ -169,6 +189,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         setItemTitle(item, title);
       }
     });
+  }
+
+  Future deleteTodoList() async {
+    await context.read(todoListProvider.notifier).deleteList();
   }
 
   Future setItemTitle(TodoItem item, String title) async {

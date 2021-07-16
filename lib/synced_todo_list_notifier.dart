@@ -29,6 +29,11 @@ class SyncedTodoListNotifier extends StateNotifier<TodoList> {
     state = await _withStateChanged((s) => s.setItemTitle(item, title));
   }
 
+  Future deleteList() async {
+    await _syncStore.delete(state.identity());
+    state = new TodoList();
+  }
+
   Future<TodoList> _withStateChanged(TodoList Function(TodoList) map) async {
     final changedState = map(state);
     await _syncStore.upsert(changedState);
