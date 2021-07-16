@@ -4,6 +4,10 @@ import 'package:mongodb_realm/syncable.dart';
 import 'package:todo_app_embbedv2/domain/todo_item.dart';
 import 'package:todo_app_embbedv2/domain/todo_list.dart';
 
+/// Encapsulates syncing changes to a [TodoList] using a [SyncStore].
+///
+/// The UI can dispatch commands and watch for state updates using this
+/// [StateNotifier].
 class SyncedTodoListNotifier extends StateNotifier<TodoList> {
   final SyncStore<TodoList> _syncStore;
 
