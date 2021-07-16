@@ -207,9 +207,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   Future deleteItem(TodoItem item) async {
     await context.read(todoListProvider.notifier).remove(item);
-    final todoListIsEmpty = context.read(todoListCountProvider) == 0;
+    final todoListIsNotEmpty = context.read(todoListCountProvider) > 0;
 
-    if (todoListIsEmpty || emptyListController == null) {
+    if (todoListIsNotEmpty || emptyListController == null) {
       return;
     }
 
