@@ -71,7 +71,7 @@ class TodoList implements Syncable<TodoListSync> {
 }
 
 /// Defines the persistable representation of a [TodoList].
-class TodoListSync implements ListSync {
+class TodoListSync implements ListSyncableDto {
   final List<Map> _payload;
 
   TodoListSync({@required List<TodoItemSync> items})
