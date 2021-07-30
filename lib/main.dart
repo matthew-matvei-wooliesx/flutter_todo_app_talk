@@ -7,10 +7,8 @@ import 'package:todo_app_embbedv2/domain/todo_list.dart';
 import 'package:todo_app_embbedv2/synced_todo_list_notifier.dart';
 import 'package:todo_app_embbedv2/new_todo.dart';
 
-import 'package:mongodb_realm/mongodb_realm.dart';
-
 final todoListProvider = StateNotifierProvider<SyncedTodoListNotifier, TodoList>((ref) =>
-  new SyncedTodoListNotifier(new SyncStore<TodoList>()));
+  new SyncedTodoListNotifier(new SyncStore<TodoList>("TodoList")));
 
 final todoListCountProvider = Provider<int>((ref) => ref.watch(todoListProvider).count);
 
