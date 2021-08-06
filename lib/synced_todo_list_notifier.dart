@@ -40,12 +40,13 @@ class SyncedTodoListNotifier extends StateNotifier<TodoList> {
 
   Future<TodoList> _withStateChanged(TodoList Function(TodoList) map) async {
     final changedState = map(state);
-    await _syncStore.upsert(changedState);
+    // await _syncStore.upsert(changedState);
     return changedState;
   }
 
   Future _hydrateTodoList() async {
-    final List<SyncableTuple> data = await _syncStore.getMany();
+    // final List<SyncableTuple> data = await _syncStore.getMany();
+    final List<SyncableTuple> data = List.empty();
     if (data?.isEmpty ?? true) {
       return;
     }
