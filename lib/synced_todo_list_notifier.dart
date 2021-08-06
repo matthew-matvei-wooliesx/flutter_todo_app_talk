@@ -34,7 +34,7 @@ class SyncedTodoListNotifier extends StateNotifier<TodoList> {
   }
 
   Future deleteList() async {
-    await _syncStore.delete(state.identity());
+    // await _syncStore.delete(state.identity());
     state = new TodoList();
   }
 
