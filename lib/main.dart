@@ -48,9 +48,9 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
     emptyListController.forward();
     super.initState();
-    MongodbRealm.connectMongoCloud("tasktracker-bbuwr").then(
-      (result) => MongodbRealm.loginAnonymously().then(
-          (value) => context.read(todoListProvider.notifier).hydrateTodoList()),
+    MongodbRealm.connectMongoCloud("tasktracker-bbuwr").whenComplete(
+      () => MongodbRealm.loginAnonymously().whenComplete(
+          () => context.read(todoListProvider.notifier).hydrateTodoList()),
     );
   }
 
