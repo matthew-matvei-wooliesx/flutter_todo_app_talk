@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:mongodb_realm/sync_store.dart';
 import 'package:todo_app_embbedv2/domain/todo_item.dart';
 import 'package:todo_app_embbedv2/domain/todo_list.dart';
@@ -9,9 +8,12 @@ import 'package:todo_app_embbedv2/new_todo.dart';
 
 import 'package:mongodb_realm/mongodb_realm.dart';
 
-final todoListProvider =
-    StateNotifierProvider<SyncedTodoListNotifier, TodoList>((ref) =>
-        new SyncedTodoListNotifier(new SyncStore<TodoList>("TodoList")));
+final todoListProvider = StateNotifierProvider<SyncedTodoListNotifier, TodoList>((ref) =>
+  new SyncedTodoListNotifier(new SyncStore<TodoList>(
+    nameOfSyncable: "TodoList",
+    hostApplicationId: "tasktracker-bbuwr"
+  )));
+
 
 final todoListCountProvider =
     Provider<int>((ref) => ref.watch(todoListProvider).count);
