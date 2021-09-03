@@ -6,8 +6,6 @@ import 'package:todo_app_embbedv2/domain/todo_list.dart';
 import 'package:todo_app_embbedv2/synced_todo_list_notifier.dart';
 import 'package:todo_app_embbedv2/new_todo.dart';
 
-import 'package:mongodb_realm/mongodb_realm.dart';
-
 final todoListProvider = StateNotifierProvider<SyncedTodoListNotifier, TodoList>((ref) =>
   new SyncedTodoListNotifier(new SyncStore<TodoList>(
     nameOfSyncable: "TodoList",
@@ -50,10 +48,6 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
     emptyListController.forward();
     super.initState();
-    MongodbRealm.connectMongoCloud("tasktracker-bbuwr").whenComplete(
-      () => MongodbRealm.loginAnonymously().whenComplete(
-          () => context.read(todoListProvider.notifier).hydrateTodoList()),
-    );
   }
 
   @override
