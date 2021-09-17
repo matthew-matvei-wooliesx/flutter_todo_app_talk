@@ -13,7 +13,9 @@ class SyncedTodoListNotifier extends StateNotifier<TodoList> {
 
   SyncedTodoListNotifier(SyncStore<TodoList> syncStore)
       : _syncStore = syncStore,
-        super(new TodoList()) {}
+        super(new TodoList()) {
+    _syncStore.addListener(_listenForSync);
+  }
 
   Future add(TodoItem item) async {
     state = await _withStateChanged((s) => s.add(item));
@@ -49,6 +51,12 @@ class SyncedTodoListNotifier extends StateNotifier<TodoList> {
         return;
       }
 
+      print("data returned from getMany: ");
+      for (var syncable in data) {
+        print(syncable.identity.toString());
+        print(syncable.content.toString());
+      }
+
       final singletonTodoList = data[0];
 
       state = TodoList.parse(
@@ -58,5 +66,14 @@ class SyncedTodoListNotifier extends StateNotifier<TodoList> {
     } catch (e) {
       print("ERROR: Failed to hydrateTodoList: ${e.toString()}");
     }
+  }
+
+  void _listenForSync() async {
+    // TODO - What if pending operations are not complete. Do we need a queue.
+    //The plugin should handle this situation I'd assume.
+
+    // This is going to double up network calls because essentially the
+    //collection could just be passed here. Could propogate a list
+    await hydrateTodoList();
   }
 }
