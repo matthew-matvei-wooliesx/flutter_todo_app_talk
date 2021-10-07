@@ -46,7 +46,12 @@ class SyncedTodoListNotifier extends StateNotifier<TodoList> {
 
   Future _hydrateTodoList() async {
     try {
-      final List<SyncableTuple> data = await _syncStore.getMany();
+      final List<SyncableTuple> data = await _syncStore.getMany(
+        waitForRemoteData: WaitForRemoteDataOptions(
+          timeout: Duration(seconds: 30),
+        ),
+      );
+
       if (data?.isEmpty ?? true) {
         return;
       }
