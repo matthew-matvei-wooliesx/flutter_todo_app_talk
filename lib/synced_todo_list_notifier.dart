@@ -13,7 +13,9 @@ class SyncedTodoListNotifier extends StateNotifier<TodoList> {
 
   SyncedTodoListNotifier(SyncStore<TodoList> syncStore)
       : _syncStore = syncStore,
-        super(new TodoList()) {}
+        super(new TodoList()) {
+    _hydrateTodoList();
+  }
 
   Future add(TodoItem item) async {
     state = await _withStateChanged((s) => s.add(item));
@@ -42,9 +44,14 @@ class SyncedTodoListNotifier extends StateNotifier<TodoList> {
     return changedState;
   }
 
-  Future hydrateTodoList() async {
+  Future _hydrateTodoList() async {
     try {
-      final List<SyncableTuple> data = await _syncStore.getMany();
+      final List<SyncableTuple> data = await _syncStore.getMany(
+        waitForRemoteData: WaitForRemoteDataOptions(
+          timeout: Duration(seconds: 30),
+        ),
+      );
+
       if (data?.isEmpty ?? true) {
         return;
       }
