@@ -7,10 +7,14 @@ import 'package:todo_app_embbedv2/domain/todo_list.dart';
 import 'package:todo_app_embbedv2/synced_todo_list_notifier.dart';
 import 'package:todo_app_embbedv2/new_todo.dart';
 
-final todoListProvider = StateNotifierProvider<SyncedTodoListNotifier, TodoList>((ref) =>
-  new SyncedTodoListNotifier(new SyncStore<TodoList>("TodoList")));
+import 'package:mongodb_realm/mongodb_realm.dart';
 
-final todoListCountProvider = Provider<int>((ref) => ref.watch(todoListProvider).count);
+final todoListProvider =
+    StateNotifierProvider<SyncedTodoListNotifier, TodoList>((ref) =>
+        new SyncedTodoListNotifier(new SyncStore<TodoList>("TodoList")));
+
+final todoListCountProvider =
+    Provider<int>((ref) => ref.watch(todoListProvider).count);
 
 void main() => runApp(ProviderScope(child: Main()));
 
@@ -44,6 +48,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
     emptyListController.forward();
     super.initState();
+    MongodbRealm.connectMongoCloud("tasktracker-bbuwr").whenComplete(
+      () => MongodbRealm.loginAnonymously().whenComplete(
+          () => context.read(todoListProvider.notifier).hydrateTodoList()),
+    );
   }
 
   @override
@@ -78,37 +86,32 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
                     heroTag: 'Create',
                   ),
                 ),
-                if (todoList.isNotEmpty) Positioned(
-                  bottom: 90,
-                  right: 10,
-                  child: FloatingActionButton(
-                    tooltip: 'Reset Todo List',
-                    child: Icon(Icons.delete),
-                    onPressed: _deleteTodoList,
-                    heroTag: 'Reset',
-                  ),
-                )
+                if (todoList.isNotEmpty)
+                  Positioned(
+                    bottom: 90,
+                    right: 10,
+                    child: FloatingActionButton(
+                      tooltip: 'Reset Todo List',
+                      child: Icon(Icons.delete),
+                      onPressed: _deleteTodoList,
+                      heroTag: 'Reset',
+                    ),
+                  )
               ],
             ),
-            body: renderBody(todoList)
-        );
+            body: renderBody(todoList));
       },
     );
   }
 
   Widget renderBody(TodoList todoList) {
-    return todoList.isEmpty
-        ? emptyList()
-        : buildListView(todoList);
+    return todoList.isEmpty ? emptyList() : buildListView(todoList);
   }
-  
-  Widget emptyList(){
+
+  Widget emptyList() {
     return Center(
-      child: FadeTransition(
-        opacity: emptyListController,
-        child: Text('No items')
-      )
-    );
+        child: FadeTransition(
+            opacity: emptyListController, child: Text('No items')));
   }
 
   Widget buildListView(TodoList todoList) {
@@ -124,7 +127,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
   }
 
-  Widget buildItem(TodoItem item, int index){
+  Widget buildItem(TodoItem item, int index) {
     return Dismissible(
       key: Key('${item.hashCode}'),
       background: Container(color: Colors.red[700]),
@@ -134,7 +137,7 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     );
   }
 
-  Widget buildListTile(TodoItem item, int index){
+  Widget buildListTile(TodoItem item, int index) {
     return ListTile(
       onTap: () => context.read(todoListProvider.notifier).toggleComplete(item),
       onLongPress: () => goToEditItemView(item),
@@ -142,13 +145,11 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
         item.title,
         key: Key('item-$index'),
         style: TextStyle(
-          color: item.complete ? Colors.grey : Colors.black,
-          decoration: item.complete ? TextDecoration.lineThrough : null
-        ),
+            color: item.complete ? Colors.grey : Colors.black,
+            decoration: item.complete ? TextDecoration.lineThrough : null),
       ),
-      trailing: Icon(item.complete
-        ? Icons.check_box
-        : Icons.check_box_outline_blank,
+      trailing: Icon(
+        item.complete ? Icons.check_box : Icons.check_box_outline_blank,
         key: Key('completed-icon-$index'),
       ),
     );
@@ -160,8 +161,8 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
     // show a back button automatically for each platform on the left top corner
     Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return NewTodoView();
-    })).then((title){
-      if(title != null && title != "") {
+    })).then((title) {
+      if (title != null && title != "") {
         addItem(TodoItem(title));
       }
     });
@@ -170,18 +171,18 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
   Future addItem(TodoItem item) async {
     await context.read(todoListProvider.notifier).add(item);
 
-    if(animatedListKey.currentState != null)
+    if (animatedListKey.currentState != null)
       animatedListKey.currentState.insertItem(0);
   }
 
-  void goToEditItemView(TodoItem item){
+  void goToEditItemView(TodoItem item) {
     // We re-use the NewTodoView and push it to the Navigator stack just like
     // before, but now we send the title of the item on the class constructor
     // and expect a new title to be returned so that we can edit the item
     Navigator.of(context).push(MaterialPageRoute(builder: (_) {
       return NewTodoView(item: item);
     })).then((title) {
-      if(title != null && title != "") {
+      if (title != null && title != "") {
         setItemTitle(item, title);
       }
     });
@@ -197,7 +198,10 @@ class HomeState extends State<Home> with TickerProviderStateMixin {
 
   Future removeItemFromList(TodoItem item, int index) async {
     animatedListKey.currentState.removeItem(index, (context, animation) {
-      return SizedBox(width: 0, height: 0,);
+      return SizedBox(
+        width: 0,
+        height: 0,
+      );
     });
 
     await deleteItem(item);

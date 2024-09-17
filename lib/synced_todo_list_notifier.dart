@@ -11,11 +11,9 @@ import 'package:todo_app_embbedv2/domain/todo_list.dart';
 class SyncedTodoListNotifier extends StateNotifier<TodoList> {
   final SyncStore<TodoList> _syncStore;
 
-  SyncedTodoListNotifier(SyncStore<TodoList> syncStore) :
-        _syncStore = syncStore,
-        super(new TodoList()) {
-    _hydrateTodoList();
-  }
+  SyncedTodoListNotifier(SyncStore<TodoList> syncStore)
+      : _syncStore = syncStore,
+        super(new TodoList()) {}
 
   Future add(TodoItem item) async {
     state = await _withStateChanged((s) => s.add(item));
@@ -44,14 +42,21 @@ class SyncedTodoListNotifier extends StateNotifier<TodoList> {
     return changedState;
   }
 
-  Future _hydrateTodoList() async {
-    final List<SyncableTuple> data = await _syncStore.getMany();
-    if (data?.isEmpty ?? true) {
-      return;
+  Future hydrateTodoList() async {
+    try {
+      final List<SyncableTuple> data = await _syncStore.getMany();
+      if (data?.isEmpty ?? true) {
+        return;
+      }
+
+      final singletonTodoList = data[0];
+
+      state = TodoList.parse(
+        singletonTodoList.identity,
+        singletonTodoList.content,
+      );
+    } catch (e) {
+      print("ERROR: Failed to hydrateTodoList: ${e.toString()}");
     }
-
-    final singletonTodoList = data[0];
-
-    state = TodoList.parse(singletonTodoList.identity, singletonTodoList.content);
   }
 }
